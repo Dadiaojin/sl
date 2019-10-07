@@ -8,6 +8,7 @@ and open the template in the editor.
     <head>
         <meta charset="UTF-8">
         <title></title>
+         <link rel="stylesheet" href="{{asset('css/page.css')}}">
     </head>
     <body>
         <h1>member被删表信息</h1>
@@ -29,7 +30,8 @@ and open the template in the editor.
       <a href="{{url('recover')}}/{{$v->id}}">恢复</a></td>
     </tr>
 	  @endforeach
-          
+          <tr><td colspan="4">共有{{$data->total()}}条，当前页为：{{$data->currentPage()}}</td></tr>
+           <tr><td colspan="4">{{$data->render()}}</td></tr>
   </tbody>
 </table>
 

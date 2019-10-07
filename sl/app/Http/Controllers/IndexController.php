@@ -13,15 +13,17 @@ class IndexController extends Controller
   
     //显示列表
     public function index(){
-       $data=DB::table('member')->where('deleted_at',null)->get();
-       
+    //   $data=DB::table('member')->where('deleted_at',null)->get();
+// 下面 分页 在vendor包内，laravel的framework，pagination/resources/view/default.blade配置样式  有simplePaginate()方式仅支持上下页 但是不支持total()
+       $data=DB::table('member')->where('deleted_at',null)->paginate(2);
         //return view('admin/list', ['data'=>$data]);
         return view('admin/list', compact('data'));
     }
     //显示被软删除列表
       public function delindex(){
-       $data=Del::onlyTrashed()->get();
+     //  $data=Del::onlyTrashed()->get();
        /*显示所有withTrashed()*/
+          $data=Del::onlyTrashed()->paginate(2);
         //return view('admin/list', ['data'=>$data]);
         return view('admin/dellist', compact('data'));
     }
