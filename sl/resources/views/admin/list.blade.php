@@ -28,6 +28,7 @@ and open the template in the editor.
       <td>年龄</td>
       <td>邮箱</td>
       <td>操作</td>
+      <td>头像</td>
     </tr>
 	  @foreach($data as $v)
 	  <tr>
@@ -35,6 +36,14 @@ and open the template in the editor.
       <td>{{$v->age}}</td>
       <td>{{$v->email}}</td>
       <td><a href="{{url('updateuser')}}/{{$v->id}}">修改</a>&nbsp;|&nbsp;<a href="{{url('del')}}/{{$v->id}}">删除</a></td>
+      <td>
+          @if(!empty($v->head))
+          <img src="{{asset($v->head)}}" style="width: 100px;height: 80px">
+          @else
+          <h1>空</h1>
+          @endif
+      
+      </td>
     </tr>
 	  @endforeach
            <tr><td colspan="4">共有{{$data->total()}}条，当前页为：{{$data->currentPage()}}</td></tr>

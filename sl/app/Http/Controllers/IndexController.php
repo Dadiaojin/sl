@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-use Request;  //注意！
-//use Illuminate\Http\Request;
+//use Request;  //注意！ Request::all()
+use Illuminate\Http\Request; //adduser(Request $request)里的 Request $request
 use DB; /*数据库*/
 use App\Http\Requests;
 use App\Http\Models\Member;
 use App\Http\Models\Del;
 use Illuminate\Database\Eloquent\SoftDeletes; /*软删除*/
+
 class IndexController extends Controller
 {
   
@@ -15,7 +16,7 @@ class IndexController extends Controller
     public function index(){
     //   $data=DB::table('member')->where('deleted_at',null)->get();
 // 下面 分页 在vendor包内，laravel的framework，pagination/resources/view/default.blade配置样式  有simplePaginate()方式仅支持上下页 但是不支持total()
-       $data=DB::table('member')->where('deleted_at',null)->paginate(2);
+       $data=DB::table('member')->where('deleted_at',null)->paginate(20);
         //return view('admin/list', ['data'=>$data]);
         return view('admin/list', compact('data'));
     }
@@ -23,7 +24,7 @@ class IndexController extends Controller
       public function delindex(){
      //  $data=Del::onlyTrashed()->get();
        /*显示所有withTrashed()*/
-          $data=Del::onlyTrashed()->paginate(2);
+          $data=Del::onlyTrashed()->paginate(5);
         //return view('admin/list', ['data'=>$data]);
         return view('admin/dellist', compact('data'));
     }
@@ -77,7 +78,7 @@ class IndexController extends Controller
         
     }
     
-    public function update(){
+    public function update(Request $request){
        
         //var_dump(Request::all());
       /*  $post=Request::all();
@@ -91,11 +92,11 @@ class IndexController extends Controller
         }*/
         
         /*先通过模型find方法找到要修改的记录，返回模型类对象，对象属性赋值，save方法往后台数据库修改。*/
-        $id=Request::input('id');
+        $id=$request->input('id');
         $info= Member::find($id);
-        $info->name = Request::input('name');
-        $info->age = Request::input('age');
-        $info->email = Request::input('email');
+        $info->name = $request->input('name');
+        $info->age = $request->input('age');
+        $info->email = $request->input('email');
         $res=$info->save();
             if($res){
                 return redirect()->action('IndexController@index');
@@ -117,13 +118,41 @@ class IndexController extends Controller
         return view('admin\adduser') ;
     }
 
-    public function adduser(){
-          $post=Request::all();
-       if(!empty($post)){
+    public function adduser(Request $request){
+     
+          $post=$request->all();
+          //处理上传文件
+    
+         
+          
+          
+      if(!empty($post)){
             $name=$post['name'];
             $age=$post['age'];
             $email=$post['email'];
-        $res=DB::table('member')->insert([
+            
+            if(!empty($post['head'])){
+           $head = $request->file('head');
+          
+         // var_dump($head)
+         
+         //验证文件是否存在：request对象->hasfile() ;  验证文件是否上传成功：request对象->file('')->isValid()
+          if($request->hasFile('head')&&$head->isValid()){
+              //获取文件名后缀
+              $ext = $head->getClientOriginalExtension();
+              //获取文件原名
+              $oldname = $head->getClientOriginalName();
+              //创建新文件名称
+              $newname = uniqid().date('Y-m-d-H-i-s').rand(10,99).".".$ext;
+              //移动方法：move()
+              $head->move('./uploads/',$newname);
+              //储存路径
+              $post['head'] = './uploads/'.$newname;
+          }
+            
+            }
+            
+     /*   $res=Member::insert([
        
           [
             'name'=>$name,
@@ -131,7 +160,9 @@ class IndexController extends Controller
             'email'=>$email
         ]
             
-            ]);
+            ]);*/
+            
+            $res=Member::create($post);
         
          if($res){
                 return redirect()->action('IndexController@index');
@@ -142,10 +173,11 @@ class IndexController extends Controller
             }
         
         
-       }    
+       }
+       }
         
                 /*返回true*/
-    }
+    
     
     
     public function del($id){
