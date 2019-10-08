@@ -10,7 +10,7 @@ and open the template in the editor.
     </head>
     <body>
         <h1>member表修改</h1>
-		<form action="{{url('update')}}" method="post">
+		<form action="{{url('update')}}" method="post" enctype="multipart/form-data">
 			<input type="hidden" name="_token" value="{{csrf_token()}}">
                         <input type="hidden" name="id" value="{{$id}}">
 		<table width="300" border="0">
@@ -26,6 +26,22 @@ and open the template in the editor.
     <tr>
       <td>邮箱：</td>
       <td><input type="email" name="email" value="{{$date->email}}"></td>
+    </tr>
+    <tr>
+        
+        <td>头像：</td>
+        <td>
+            @if(!empty($date->head))
+            <img src="{{asset($date->head)}}">
+            @else
+            <h1>空</h1>
+            @endif
+        </td>
+      
+    </tr>
+    <td>更改头像：</td>
+      <td><input type="file" name="head" multiple="multiple"></td>
+      
     </tr>
     <tr>
       <td colspan="2"><input type="submit"><input type="reset"></td>

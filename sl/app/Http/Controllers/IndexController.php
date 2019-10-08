@@ -91,13 +91,48 @@ class IndexController extends Controller
             $res=DB::table('member')->where('id',$id)->update(['name'=>$name,'age'=>"$age",'email'=>$email]);
         }*/
         
+        
+       
+        
         /*先通过模型find方法找到要修改的记录，返回模型类对象，对象属性赋值，save方法往后台数据库修改。*/
-        $id=$request->input('id');
+        
+        
+       if(!empty($request['head'])){
+           $head = $request->file('head');
+          
+         // var_dump($head)
+         
+         //验证文件是否存在：request对象->hasfile() ;  验证文件是否上传成功：request对象->file('')->isValid()
+          if($request->hasFile('head')&&$head->isValid()){
+              //获取文件名后缀
+              $ext = $head->getClientOriginalExtension();
+              //获取文件原名
+              $oldname = $head->getClientOriginalName();
+              //创建新文件名称
+              $newname = uniqid().date('Y-m-d-H-i-s').rand(10,99).".".$ext;
+              //移动方法：move()
+              $head->move('./uploads/',$newname);
+              //储存路径
+              $post['head'] = './uploads/'.$newname;
+          }
+          
+        
+        }
+           $id=$request->input('id');
         $info= Member::find($id);
         $info->name = $request->input('name');
         $info->age = $request->input('age');
         $info->email = $request->input('email');
+        if(!empty($post['head'])){
+        $info->head = $post['head'];
+        }
+        
+        
+     
+            
         $res=$info->save();
+        
+        
             if($res){
                 return redirect()->action('IndexController@index');
             }  else {
@@ -106,11 +141,11 @@ class IndexController extends Controller
                
             }
         
-           
+             
           
        
         
-        //var_dump($_POST);
+        var_dump($res);
     }
 
     
