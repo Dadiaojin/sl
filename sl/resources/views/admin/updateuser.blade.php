@@ -50,6 +50,13 @@ and open the template in the editor.
   </tbody>
 			</table></form>
 
-       
+       {{-- 错误提示显示validation --}}
+     @if(count($errors)>0)
+        <div>
+            @foreach($errors->all() as $error)
+            <p>{{$error}}</p>
+            @endforeach
+        </div>
+        @endif
 
 </table>

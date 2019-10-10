@@ -10,10 +10,27 @@ Target Server Type    : MYSQL
 Target Server Version : 50710
 File Encoding         : 65001
 
-Date: 2019-10-08 14:10:57
+Date: 2019-10-11 02:19:35
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for `admin`
+-- ----------------------------
+DROP TABLE IF EXISTS `admin`;
+CREATE TABLE `admin` (
+  `username` varchar(20) NOT NULL,
+  `salt` char(32) DEFAULT NULL,
+  `password` char(32) NOT NULL,
+  `id` int(12) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=gb2312;
+
+-- ----------------------------
+-- Records of admin
+-- ----------------------------
+INSERT INTO `admin` VALUES ('admin', '543f51457bd85359a11fb32557340ac6', '1bca305ca22f56aca6b46951e8da93c3', '1');
 
 -- ----------------------------
 -- Table structure for `member`
@@ -28,14 +45,14 @@ CREATE TABLE `member` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=63 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=65 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of member
 -- ----------------------------
 INSERT INTO `member` VALUES ('1', '你爸爸的a1', '30', 'xiaoxia@qq.com', null, '2019-09-25 08:59:23', '2019-09-25 08:59:23');
 INSERT INTO `member` VALUES ('23', '大雕', '21', '555@qq.com', null, '2019-09-25 08:42:17', '2019-09-25 08:42:17');
-INSERT INTO `member` VALUES ('3', '小华', '20', 'xiaohua@qq.com', null, null, null);
+INSERT INTO `member` VALUES ('3', '小华qqq', '20', 'xiaohua@qq.com', null, null, null);
 INSERT INTO `member` VALUES ('22', 'dadjin啊', '21', 'dadjin@dadjin.com', null, null, null);
 INSERT INTO `member` VALUES ('21', '小光', '30', 'dadjin@qq.com', null, null, null);
 INSERT INTO `member` VALUES ('19', '小光', '30', 'dadjin@qq.com', null, '2019-09-25 08:33:12', '2019-09-25 08:33:12');
@@ -72,4 +89,5 @@ INSERT INTO `member` VALUES ('58', '哇', '2', '5555@qq.com', null, null, null);
 INSERT INTO `member` VALUES ('59', '哇', '2', '565433568@qq.com', null, null, null);
 INSERT INTO `member` VALUES ('60', '哇', '2', '565433568@qq.com', null, null, null);
 INSERT INTO `member` VALUES ('61', '哇', '3', '565433568@qq.com', null, null, null);
-INSERT INTO `member` VALUES ('62', '哇aa', '3', '565433568@qq.com', './uploads/5d9c25d58ee0c2019-10-08-05-59-4923.jpg', null, null);
+INSERT INTO `member` VALUES ('64', '哇aaaa', '20', '565433568@qq.com', null, null, null);
+INSERT INTO `member` VALUES ('63', '哇aa', '3', '5555@qq.com', null, null, null);

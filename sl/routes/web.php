@@ -52,8 +52,11 @@ Route::get('demo','Admin\MemberController@demo');
 Route::get('demo2','Admin\MemberController@demo2');
 
 Route::get('updateuser/{id}','IndexController@updateuser')->where(['id'=>'\d+']);
+Route::get('loginview','IndexController@loginview');
+
 
 Route::get('addview','IndexController@addview');
 Route::post('update','IndexController@update');
 Route::post('adduser','IndexController@adduser');
+Route::post('login','IndexController@login');
 

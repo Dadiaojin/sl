@@ -11,7 +11,7 @@ and open the template in the editor.
     <body>
         <h1>member表添加</h1>
         <form action="{{url('/adduser')}}" method="post" enctype="multipart/form-data">
-			{{ csrf_field() }}
+			<input type="hidden" name="_token" value="{{csrf_token()}}">
                        
 		<table width="400" border="0">
   <tbody>
@@ -40,7 +40,15 @@ and open the template in the editor.
   </tbody>
 			</table>
                 </form>
-
+        
+  {{-- 错误提示显示validation --}}
+     @if(count($errors)>0)
+        <div>
+            @foreach($errors->all() as $error)
+            <p>{{$error}}</p>
+            @endforeach
+        </div>
+        @endif
        
 
 </table>

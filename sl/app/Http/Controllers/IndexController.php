@@ -5,15 +5,26 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request; //adduser(Request $request)里的 Request $request
 use DB; /*数据库*/
 use App\Http\Requests;
+use App\Http\Models\Admin; //用不了
 use App\Http\Models\Member;
 use App\Http\Models\Del;
 use Illuminate\Database\Eloquent\SoftDeletes; /*软删除*/
-
+use Validator;
 class IndexController extends Controller
 {
   
     //显示列表
     public function index(){
+        
+       if(empty($_SESSION)){
+          session_start();
+      }
+      
+      if(empty($_SESSION['userinfo']['id']) && empty($_SESSION['userinfo']['name'])){
+          return redirect()->action('IndexController@loginview');
+      }
+      
+      
     //   $data=DB::table('member')->where('deleted_at',null)->get();
 // 下面 分页 在vendor包内，laravel的framework，pagination/resources/view/default.blade配置样式  有simplePaginate()方式仅支持上下页 但是不支持total()
        $data=DB::table('member')->where('deleted_at',null)->paginate(20);
@@ -95,7 +106,12 @@ class IndexController extends Controller
        
         
         /*先通过模型find方法找到要修改的记录，返回模型类对象，对象属性赋值，save方法往后台数据库修改。*/
-        
+         $this->validate($request, [
+           'name'=>'required|min:4',
+            'age'=>'required|min:16|integer',
+            'email'=>'email'
+            
+        ]);
         
        if(!empty($request['head'])){
            $head = $request->file('head');
@@ -145,7 +161,7 @@ class IndexController extends Controller
           
        
         
-        var_dump($res);
+      
     }
 
     
@@ -154,7 +170,14 @@ class IndexController extends Controller
     }
 
     public function adduser(Request $request){
-     
+    //限制  书P101
+        $this->validate($request, [
+           'name'=>'required|min:4',
+            'age'=>'required|min:16|integer',
+            'email'=>'email'
+            
+        ]);
+        
           $post=$request->all();
           //处理上传文件
     
@@ -203,12 +226,13 @@ class IndexController extends Controller
                 return redirect()->action('IndexController@index');
             }  else {
                 //var_dump($res);
-                return redirect()->back();
+                return redirect()->action('IndexController@addview');
                
             }
         
         
        }
+       
        }
         
                 /*返回true*/
@@ -243,4 +267,46 @@ class IndexController extends Controller
         $data=$request->all();
         var_dump($data);
     }
+    
+    //登录页面
+    
+    public function loginview(){
+        return view('admin/login');
+    }
+
+
+    //登录处理
+  public function login(Request $request){
+      if(empty($_SESSION)){
+          session_start();
+      }
+     // var_dump($request->all());
+     // var_dump($request->input('username'));
+      $checkname= Admin::where('username','=',$request->input('username'))->first();
+      //var_dump($checkname);
+      if(!empty($checkname)){
+            if($checkname['password']== md5($checkname['salt'].md5($request->input('password')))){
+                 $_SESSION['userinfo']=array(
+                     'id'=>$checkname['id'],
+                     'name' =>$checkname['username']
+                 );
+                  return redirect()->action('IndexController@index');
+                 
+            }  else {
+               echo "密码错误"; 
+            }           
+          
+      }else{
+          echo "账户错误";
+      }
+      
+      
+  }
+  
+   
+    
+    
 }
+
+
+

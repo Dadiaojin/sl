@@ -15,8 +15,9 @@ laravel框架
 
 #### 使用说明
 
-1. 输入 localhost\sl\public\index 是显示列表
+1. 输入 localhost\sl\public\index 是显示列表（未登录自动跳转登录）
 2. 输入 localhost\sl\public\delindex 是被删除显示列表
+2. 输入 localhost\sl\public\loginview 是登录页面（号码：admin 密码 123456）
 3. 具体看sl\routes\web.php
 
 #### 参与贡献
