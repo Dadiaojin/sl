@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>留言板后台</title>
+<title>系统登陆</title>
 <link rel="stylesheet" href="{{asset('css/login.css')}}" />
 
 </head>
@@ -17,6 +17,15 @@
 		密码：<input name="password" type="password" class="input" />
 		<input type="submit" value="登录" class="button" />
 		</form>
+                  {{-- 错误提示显示validation --}}
+     @if(count($errors)>0)
+        <div>
+            @foreach($errors->all() as $error)
+            <p>{{$error}}</p>
+            @endforeach
+        </div>
+        @endif
+	</div>
 	</div>
 </div>
 </body>

@@ -56,7 +56,9 @@ Route::get('loginview','IndexController@loginview');
 
 
 Route::get('addview','IndexController@addview');
+Route::get('regist','IndexController@regist');
+
 Route::post('update','IndexController@update');
 Route::post('adduser','IndexController@adduser');
 Route::post('login','IndexController@login');
-
+Route::post('regist','IndexController@regist');

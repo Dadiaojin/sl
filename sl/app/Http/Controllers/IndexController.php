@@ -277,6 +277,16 @@ class IndexController extends Controller
 
     //登录处理
   public function login(Request $request){
+      
+        if(!empty($request)){
+             $this->validate($request, [
+           'username'=>'required|min:4',
+            'password'=>'required|min:6',
+            
+            
+        ]);
+        }
+      
       if(empty($_SESSION)){
           session_start();
       }
@@ -303,7 +313,62 @@ class IndexController extends Controller
       
   }
   
-   
+   function regist(Request $request){
+      
+       
+       
+       if(empty($request['username'])){
+           
+       return view('admin/regist');
+       }
+       
+        if(!empty($request)){
+             $this->validate($request, [
+           'username'=>'required|min:4',
+            'password'=>'required|min:6',
+            
+            
+        ]);
+            //echo $request['username'];
+            $salt= md5(microtime());
+           $password=md5($salt.md5($request['password']));
+            
+           
+         $add=new Admin();
+         if(empty($add->where('username','=',$request['username'])->first())){
+         
+         
+       /* $add->username=$request['username'];
+        
+         $add->password=$password;
+         
+         $add->salt=$salt;*/
+        
+        $res = Admin::insertGetId(['username'=>$request['username'],'password'=>$password,'salt'=>$salt]);
+        
+     
+        if($res){
+         if(empty($_SESSION)){
+          session_start();
+      }
+              $_SESSION['userinfo']=array(
+                     'id'=>$res,
+                     'name' =>$request['username']);
+           
+            return redirect()->action('IndexController@index');
+        } else {
+            echo '注册失败';  
+        }
+         }else{
+             echo '名字重复';
+         }
+       }
+             
+        
+        
+        
+        
+   }
     
     
 }
