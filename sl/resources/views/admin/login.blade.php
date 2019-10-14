@@ -15,6 +15,8 @@
                     {{csrf_field()}}
 		用户名：<input name="username" type="text" class="input" />
 		密码：<input name="password" type="password" class="input" />
+                验证码：<input name="captcha" type="text" class="input" />
+                <img src="{{captcha_src()}}" onclick="this.src='{{captcha_src()}}+Math.random()'"/>
 		<input type="submit" value="登录" class="button" />
 		</form>
                   {{-- 错误提示显示validation --}}

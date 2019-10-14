@@ -282,6 +282,7 @@ class IndexController extends Controller
              $this->validate($request, [
            'username'=>'required|min:4',
             'password'=>'required|min:6',
+                 'captcha'=>'required|captcha',
             
             
         ]);

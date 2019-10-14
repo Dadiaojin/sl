@@ -168,6 +168,10 @@ return [
         /*
          * Package Service Providers...
          */
+        
+        Mews\Captcha\CaptchaServiceProvider::class,
+        
+        
 
         //
 
@@ -228,6 +232,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         /*debug*/
          'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Captcha'=> Mews\Captcha\Facades\Captcha::class,
+        
     ],
 
 ];
