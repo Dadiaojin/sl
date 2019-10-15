@@ -15,21 +15,25 @@ class IndexController extends Controller
   
     //显示列表
     public function index(){
+        /* laravel框架与传统$_SESSION 不是放在同一个文件夹 所以不互通 */
         
-       if(empty($_SESSION)){
+      /* if(empty($_SESSION)){
           session_start();
-      }
+      }*/
+      $session=session()->get("userinfo");
       
-      if(empty($_SESSION['userinfo']['id']) && empty($_SESSION['userinfo']['name'])){
+      if(empty($session['id']) && empty($session['name'])){
           return redirect()->action('IndexController@loginview');
       }
-      
+      else{
+      $id=$session['id'];
+      $name=$session['name'];
       
     //   $data=DB::table('member')->where('deleted_at',null)->get();
 // 下面 分页 在vendor包内，laravel的framework，pagination/resources/view/default.blade配置样式  有simplePaginate()方式仅支持上下页 但是不支持total()
        $data=DB::table('member')->where('deleted_at',null)->paginate(20);
         //return view('admin/list', ['data'=>$data]);
-        return view('admin/list', compact('data'));
+      return view('admin/list', compact('data','id','name'));}
     }
     //显示被软删除列表
       public function delindex(){
@@ -271,6 +275,10 @@ class IndexController extends Controller
     //登录页面
     
     public function loginview(){
+        session_start();
+       // var_dump($_SESSION);
+       // 框架用↓
+       //   var_dump(session()->all())
         return view('admin/login');
     }
 
@@ -297,10 +305,20 @@ class IndexController extends Controller
       //var_dump($checkname);
       if(!empty($checkname)){
             if($checkname['password']== md5($checkname['salt'].md5($request->input('password')))){
-                 $_SESSION['userinfo']=array(
+                /*$_SESSION['userinfo']=array(
                      'id'=>$checkname['id'],
                      'name' =>$checkname['username']
-                 );
+                 );*/
+               $name=$checkname['username'];
+                $id=$checkname['id'];
+                 session(['userinfo'=>['name'=>$name,'id'=>$id]]);
+             
+            var_dump(session()->all());
+                
+              // $tt= session()->get("userinfo");
+                //var_dump($tt['name']);
+                
+               
                   return redirect()->action('IndexController@index');
                  
             }  else {
@@ -349,13 +367,18 @@ class IndexController extends Controller
         
      
         if($res){
-         if(empty($_SESSION)){
+     /*    if(empty($_SESSION)){
           session_start();
       }
               $_SESSION['userinfo']=array(
                      'id'=>$res,
                      'name' =>$request['username']);
-           
+           */
+            /*上面是传统session 下面是框架session 框架session与传统不互通*/
+            $name=$request['username'];
+          session(['userinfo'=>['name'=>$name,'id'=>$res]]);
+            
+            
             return redirect()->action('IndexController@index');
         } else {
             echo '注册失败';  
@@ -370,6 +393,14 @@ class IndexController extends Controller
         
         
    }
+   
+   
+   public function loginout(){
+       session()->flush();
+      // var_dump($_SESSION); 不符合laravel框架  
+      //  var_dump(session()->all())  这个符合框架
+       return redirect()->action('IndexController@loginview');
+   } 
     
     
 }

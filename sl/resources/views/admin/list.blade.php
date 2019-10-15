@@ -20,6 +20,7 @@ and open the template in the editor.
     </head>
     <body>
         <h1>member表信息</h1>
+            <h3>欢迎用户：{{$name}} 登录 <a href="{{url('loginout')}}">退出</a></h3>
         <a href="{{url('addview')}}">添加</a>
         <table border="1">
   <tbody>
